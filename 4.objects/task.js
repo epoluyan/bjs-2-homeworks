@@ -2,7 +2,6 @@ function Student(name, gender, age) {
   this.name = name;
   this.gender = gender;
   this.age = age;
-  this.marks = [];
 }
 
 Student.prototype.setSubject = function (subjectName) {
@@ -10,10 +9,11 @@ Student.prototype.setSubject = function (subjectName) {
 }
 
 Student.prototype.addMark = function (mark) {
-  this.marks === undefined ? this.marks[0] = mark  : this.marks.push(mark);
+  this.marks === undefined ? this.marks = [mark]  : this.marks.push(mark);
 }
 
 Student.prototype.addMarks = function (...mark) {
+  this.marks = [];
   mark.forEach(element => this.marks.push(element));
 }
 
