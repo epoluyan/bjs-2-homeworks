@@ -11,20 +11,22 @@ class AlarmClock   {
             throw new TypeError('Невозможно идентифицировать будильник. Параметр id не передан.')
         }
 
-        this.alarmCollection.map(item => { 
-            if (item[0] === timerId) { 
-                console.error('Будильник с таким id уже существует.');
-                return 0
-            }
-        });
+        if (this.alarmCollection.find(element => element.id === timerId)) {
+            console.error('Будильник с таким id уже существует.');
+            return null
+        }
 
-        this.alarmCollection.push([timerId, startTime, actionAlarm]);
+        this.alarmCollection.push({
+            time: startTime,
+            id: timerId,
+            callback: actionAlarm
+        });
     }
 
     removeClock (id) {
-        this.alarmCollection = this.alarmCollection.filter(function(item) {
-            return item[0] != id;
-        });
+        this.alarmCollection.splice(this.alarmCollection.indexOf(
+            this.alarmCollection.find(element => element.id === id)
+        ), 1);
     }
 
     getCurrentFormattedTime() {
@@ -34,21 +36,26 @@ class AlarmClock   {
         return `${hours}:${minutes}`
     }
 
-    checkClock (alarmCollection) {
-        console.log('alarmCollection', alarmCollection)
-        // if alarmCollection.startTime === getCurrentFormattedTime() {
-
-        // }
-
-    }
-
     start () {
-        
-
+        const checkClock = () => {
+            if (this.time == this.getCurrentFormattedTime()) {
+                return this.callback();
+            }
+        }
+        if (!this.timerId) {
+            this.timerId = setInterval = () => {
+                this.alarmCollection.map(element => checkClock(element));
+            }
+        }
     }
 
     stop () {
-        
+        let clearInterval = () => {
+            this.timerId = null;
+        }
+        if (this.timerId) {
+            clearInterval();
+        }
     }
 
     printAlarms () {
@@ -58,13 +65,14 @@ class AlarmClock   {
     }
 
     clearAlarms () {
-        stop();
-        this.alarmCollection.splice(0,this.alarmCollection.length);
+        this.stop();
+        this.alarmCollection = [];
     }
     
 }
 
 let phoneAlarm = new AlarmClock();
+phoneAlarm.addClock('09:01', () => console.log('Порав вставать'), 1)
 phoneAlarm.addClock('09:01', () => console.log('Порав вставать'), 1)
 phoneAlarm.addClock('09:02', () => console.log('Давай, вставай уже'), 2)
 phoneAlarm.addClock('09:05', () => console.log('Вставай, а то проспишь!'), 1)
